@@ -1,20 +1,41 @@
-import { useState } from 'react'
+
+
+import { useState, useEffect } from 'react'
 
 function App() {
   const [form, setForm] = useState({ nombre: '', fecha: '', hora: '', servicio: '' });
+  const [listaTurnos, setListaTurnos] = useState([]); // Estado para la lista
+
+  const URL_API = 'https://tu-url-de-render.onrender.com/api/turnos';
+
+  // 1. Función para obtener los turnos
+  const obtenerTurnos = async () => {
+    try {
+      const response = await fetch(URL_API);
+      const data = await response.json();
+      setListaTurnos(data);
+    } catch (error) {
+      console.error("Error cargando turnos:", error);
+    }
+  };
+
+  // 2. Cargar turnos al iniciar la página
+  useEffect(() => {
+    obtenerTurnos();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // CAMBIA ESTA URL POR LA TUYA DE RENDER
-    const response = await fetch('https://easybooking-6vqp.onrender.com/api/turnos', {
+    const response = await fetch(URL_API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(form)
     });
-
-    const data = await response.json();
-    alert(data.mensaje);
+    
+    if(response.ok) {
+      alert("Turno agendado");
+      obtenerTurnos(); // 3. Recargar la lista automáticamente tras guardar
+    }
   };
 
   return (
@@ -33,6 +54,23 @@ function App() {
           Agendar Turno
         </button>
       </form>
+
+      <hr /> 
+{/* LISTADO DE TURNOS */}
+      <h2>Turnos Agendados</h2>
+      <div style={{ display: 'grid', gap: '10px' }}>
+        {listaTurnos.length === 0 ? <p>No hay turnos aún.</p> : 
+          listaTurnos.map((t) => (
+            <div key={t._id} style={{ border: '1px solid #ccc', padding: '10px', borderRadius: '8px' }}>
+              <strong>{t.nombre}</strong> - {t.servicio} <br />
+              <small>📅 {t.fecha} a las ⏰ {t.hora}</small>
+            </div>
+          ))
+        }
+      </div>
+
+
+
     </div>
   )
 }

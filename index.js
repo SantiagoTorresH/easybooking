@@ -35,8 +35,13 @@ app.post('/api/turnos', async (req, res) => {
 
 // RUTA PARA VER TODOS LOS TURNOS (Opcional, para el administrador)
 app.get('/api/turnos', async (req, res) => {
-    const turnos = await Turno.find();
-    res.json(turnos);
+    try{
+        const turnos = await Turno.find();
+        res.json(turnos);
+
+    } catch(error) {
+        res.status(500).json({mensaje: 'Error al obtener los turnos'});
+    }
 });
 
 app.listen(PORT, () => {
