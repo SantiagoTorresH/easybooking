@@ -44,6 +44,17 @@ app.get('/api/turnos', async (req, res) => {
     }
 });
 
+// RUTA PARA ELIMINAR UN TURNO
+app.delete('/api/turnos/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        await Turno.findByIdAndDelete(id);
+        res.json({ mensaje: 'Turno eliminado correctamente' });
+    } catch (error) {
+        res.status(500).json({ mensaje: 'Error al eliminar el turno' });
+    }
+});
+
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
