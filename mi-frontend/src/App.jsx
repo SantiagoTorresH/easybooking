@@ -86,6 +86,14 @@ function App() {
     }
   };
 
+const enviarWhatsApp = (turno) => {
+  const telefono = "573000000000"; // Reemplaza con el número real del negocio (con código de país)
+  const mensaje = `Hola! Quiero confirmar mi turno:%0A👤 *Nombre:* ${turno.nombre}%0A📅 *Fecha:* ${turno.fecha}%0A⏰ *Hora:* ${turno.hora}%0A✂️ *Servicio:* ${turno.servicio}`;
+  
+  const url = `https://wa.me/${telefono}?text=${mensaje}`;
+  window.open(url, '_blank');
+};  
+
   return (
     <div className="container">
       <header className="header">
@@ -180,6 +188,22 @@ function App() {
                       ⏰ <strong>{turno.hora}</strong>
                     </p>
                   </div>
+
+                  <button
+    onClick={() => enviarWhatsApp(turno)}
+    style={{
+      flex: 1,
+      padding: '8px',
+      backgroundColor: '#25D366',
+      color: 'white',
+      border: 'none',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      fontWeight: 'bold'
+    }}
+  >
+    📱 Confirmar
+  </button>
                   <button
                     onClick={() => eliminarTurno(turno._id)}
                     style={{
